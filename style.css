@@ -22,3 +22,7 @@ td {
 .clear {
   background-color: rgb(255, 121, 143);
 }
+.first-td {
+  padding-right: .5rem;
+  text-align: center;
+}
