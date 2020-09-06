@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>remake calculator2</title>
+  <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  
+  <div id="app">
+    <table border="1">
+      <tr>
+        <td colspan="3" rowspan="2" class="current">{{ display || 0 }}</td>
+        <td @click="clear" class="clear">C</td>
+      </tr>
+  
+      <tr>
+        <td @click="clearEntry" class="clear">CE</td>
+      </tr>
+  
+      <tr>
+        <td @click="number('7')" class="btn">7</td>
+        <td @click="number('8')" class="btn">8</td>
+        <td @click="number('9')" class="btn">9</td>
+        <td @click="divide" class="right">÷</td>
+      </tr>
+  
+      <tr>
+        <td @click="number('4')" class="btn">4</td>
+        <td @click="number('5')" class="btn">5</td>
+        <td @click="number('6')" class="btn">6</td>
+        <td @click="times" class="right">×</td>
+      </tr>
+  
+      <tr>
+        <td @click="number('1')" class="btn">1</td>
+        <td @click="number('2')" class="btn">2</td>
+        <td @click="number('3')" class="btn">3</td>
+        <td @click="minus" class="right">-</td>
+      </tr>
+  
+      <tr>
+        <td @click="number('0')" class="btn">0</td>
+        <td @click="decimalPoint" class="btn">.</td>
+        <td @click="equal" class="btn">=</td>
+        <td @click="add" class="right">+</td>
+      </tr>
+    </table>
+  </div>
+
+<script>
+
+  new Vue({
+    el: "#app",
+    data: {
+      display: '',
+      previous: null,
+      formula: null,
+      checkFormula: false
+    },
+    methods: {
+      clear() {
+        this.display = '';
+        this.previous = null;
+        this.formula = null;
+      },
+      clearEntry() {
+        this.display = '';
+      },
+      decimalPoint() {
+        if(this.display.indexOf('.') == -1) {
+          number('.');
+        }
+      },
+      number(num) {
+        if(this.checkFormula) {
+          this.display = num;
+          this.checkFormula = false;
+        } else {
+          this.display += num;
+        }
+      },
+      calcFunc() {
+        if(this.formula) {
+          this.display = this.formula(parseFloat(this.previous), parseFloat(this.display));
+          this.formula = null;
+        }
+      },
+      forFormula() {
+        this.previous = this.display;
+        this.checkFormula = true;
+      },
+      equal() {
+        this.calcFunc();
+      },
+      divide() {
+        this.calcFunc();
+        this.formula = (a, b) => (a / b);
+        this.forFormula();
+      },
+      times() {
+        this.calcFunc();
+        this.formula = (a, b) => (a * b);
+        this.forFormula();
+      },
+      minus() {
+        this.calcFunc();
+        this.formula = (a, b) => (a - b);
+        this.forFormula();
+      },
+      add() {
+        this.calcFunc();
+        this.formula = (a, b) => (a + b);
+        this.forFormula();
+      }
+    }
+  });
+
+</script>
+</body>
+</html>
